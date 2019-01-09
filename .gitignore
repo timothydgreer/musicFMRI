@@ -13,3 +13,5 @@ happy_split/
 ratings/
 ratings_behav/
 ratings_fmri/
+!ratings_fmri/*.m
+!*/*.m
