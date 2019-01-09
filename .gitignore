@@ -1,0 +1,15 @@
+*.wav
+*.flac
+*.mp3
+*.mat
+ecg_peaks_ibi/
+mfcc/
+ratings_fmri/
+MIRtoolbox1.7.1/
+sad_l_split/
+sad_s_split/
+scr/
+happy_split/
+ratings/
+ratings_behav/
+ratings_fmri/
