@@ -4,7 +4,7 @@
 %4 = sad_long_enjoyment
 %5 = sad_short_emotion
 %6 = sad_short_enjoyment
-song = 6
+song = 3
 average_annotations = [];
 average_hrv = [];
 for i = 1:length(ibi_data(song).sub)
