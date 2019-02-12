@@ -71,7 +71,7 @@ end
 MFCCs_sad_l_double_del = [zeros(13,1),MFCCs_sad_l_double_del];
 
 save(strcat('data_sad_l_full_song_',num2str(grain*1000)))
-%%
+
 clear 
 
 cd '../sad_s_split'
@@ -136,7 +136,7 @@ hcdf_sad_s_st = [0,hcdf_sad_s_st];
 flux_sad_s_st = [0,flux_sad_s_st];
 
 
-for i = 1:length(MFCCs_sad_l)-1
+for i = 1:length(MFCCs_sad_s)-1
     MFCCs_sad_s_del = [MFCCs_sad_s_del, MFCCs_sad_s(:,i+1)-MFCCs_sad_s(:,i)];
 end
 MFCCs_sad_s_del = [zeros(13,1),MFCCs_sad_s_del];
@@ -212,7 +212,7 @@ flux_happy_st = mirgetdata(mirflux(mirframe('hnl_norm.wav',2*grain,'s',grain,'s'
 hcdf_happy_st = [0,hcdf_happy_st];
 flux_happy_st = [0,flux_happy_st];
 
-for i = 1:length(MFCCs_sad_l)-1
+for i = 1:length(MFCCs_happy)-1
     MFCCs_happy_del = [MFCCs_happy_del, MFCCs_happy(:,i+1)-MFCCs_happy(:,i)];
 end
 MFCCs_happy_del = [zeros(13,1),MFCCs_happy_del];
