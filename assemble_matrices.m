@@ -15,11 +15,17 @@ for j = 1:6
         spread = mfcc_behav_corrs(j).processed_spread_signals.sub{1,1}.mfcc{1,1};
         skewness = mfcc_behav_corrs(j).processed_skewness_signals.sub{1,1}.mfcc{1,1};
         kurtosis = mfcc_behav_corrs(j).processed_kurtosis_signals.sub{1,1}.mfcc{1,1};
-        chroma = mfcc_behav_corrs(j).processed_chroma_signals.sub{1,1}.mfcc{1,1};      
+        chroma = mfcc_behav_corrs(j).processed_chroma_signals.sub{1,1}.mfcc{1,1};
+        mode = mfcc_behav_corrs(j).processed_mode_signals.sub{1,1}.mfcc{1,1};
+        compress = mfcc_behav_corrs(j).processed_compression_signals.sub{1,1}.mfcc{1};
+        hcdf = mfcc_behav_corrs(j).processed_hcdf_signals.sub{1,1}.mfcc{1};
+        flux = mfcc_behav_corrs(j).processed_flux_signals.sub{1,1}.mfcc{1};
+        lpcs = mfcc_behav_corrs(j).processed_lpcs_signals.sub{1,1}.mfcc{1};
+        
     end
-    big_X = [mfccs, mfccs_d, mfccs_dd, clarity, brightness, key_strength, rmses, centroid, spread, skewness, kurtosis, chroma];
-    for k = 1:length(big_X)
-        for l = 1:length(big_X(k))
+    big_X = [mfccs, mfccs_d, mfccs_dd, clarity, brightness, key_strength, rmses, centroid, spread, skewness, kurtosis, chroma, mode, compress, hcdf, flux, lpcs];
+    for k = 1:size(big_X,1)
+        for l = 1:size(big_X,2)
             if isnan(big_X(k,l))
                 big_X(k,l) = big_X(k-1,l);
                 kkkk=3
@@ -28,6 +34,5 @@ for j = 1:6
     end
     csvwrite(strcat('X_matrix',num2str(j),'.csv'),big_X)
     csvwrite(strcat('y_matrix',num2str(j),'.csv'),mean(ratings,2))
-
-
+    csvwrite(strcat('y_matrix_t_',num2str(j),'.csv'),mean(ratings,2)./std(ratings,0,2))
 end

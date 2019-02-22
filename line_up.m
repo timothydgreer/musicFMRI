@@ -7,6 +7,12 @@ clear, clc
 load('data_sad_s_full_song_25.mat') % Load mfcc data. Note that it is row-oriented
 load('data_sad_l_full_song_25.mat')
 load('data_happy_full_song_25.mat')
+load('lpcs_sad_s.mat') % Load mfcc data. Note that it is row-oriented
+load('lpcs_sad_l.mat')
+load('lpcs_happy.mat')
+compress_happy = load('compressibilities_hnl_norm_0.csv');
+compress_sad_s = load('compressibilities_snl_s_norm_0.csv');
+compress_sad_l = load('compressibilities_snl_l_norm_0.csv');
 
 path = 'ratings_behav/'; %Set path to the emotion and enjoyment ratings
 
@@ -54,6 +60,10 @@ for i = 1:length(sub_list)
                 kurtosis = kurtosis_happy_st';
                 chroma = chroma_happy_st';
                 mode = mode_happy_st';
+                compress = compress_happy;
+                hcdf = hcdf_happy_st';
+                flux = flux_happy_st';
+                lpcs = lpcs_happy;
            case 2
                 mfcc_behav_corrs(k).type = 'happy_enjoyment';
                 ratings_ext = '_hnl_n_enjoy_log.txt';
@@ -71,6 +81,10 @@ for i = 1:length(sub_list)
                 kurtosis = kurtosis_happy_st';
                 chroma = chroma_happy_st';
                 mode = mode_happy_st';
+                compress = compress_happy;
+                hcdf = hcdf_happy_st';
+                flux = flux_happy_st';
+                lpcs = lpcs_happy;
            case 3
                 mfcc_behav_corrs(k).type = 'sad_long_emotion';
                 ratings_ext = '_snl_l_emo_log.txt';
@@ -88,6 +102,10 @@ for i = 1:length(sub_list)
                 kurtosis = kurtosis_sad_l_st';
                 chroma = chroma_sad_l_st';
                 mode = mode_sad_l_st';
+                compress = compress_sad_l;
+                hcdf = hcdf_sad_l_st';
+                flux = flux_sad_l_st';
+                lpcs = lpcs_sad_l;
            case 4
                 mfcc_behav_corrs(k).type = 'sad_long_enjoyment';
                 ratings_ext = '_snl_l_enjoy_log.txt';
@@ -105,6 +123,10 @@ for i = 1:length(sub_list)
                 kurtosis = kurtosis_sad_l_st';
                 chroma = chroma_sad_l_st';
                 mode = mode_sad_l_st';
+                compress = compress_sad_l;
+                hcdf = hcdf_sad_l_st';
+                flux = flux_sad_l_st';
+                lpcs = lpcs_sad_l;
            case 5
                 mfcc_behav_corrs(k).type = 'sad_short_emotion';
                 ratings_ext = '_snl_s_emo_log.txt';
@@ -122,6 +144,10 @@ for i = 1:length(sub_list)
                 kurtosis = kurtosis_sad_s_st';
                 chroma = chroma_sad_s_st';
                 mode = mode_sad_s_st';
+                compress = compress_sad_s;
+                hcdf = hcdf_sad_s_st';
+                flux = flux_sad_s_st';
+                lpcs = lpcs_sad_s;
            case 6
                 mfcc_behav_corrs(k).type = 'sad_short_enjoyment';
                 ratings_ext = '_snl_s_enjoy_log.txt';
@@ -139,6 +165,10 @@ for i = 1:length(sub_list)
                 kurtosis = kurtosis_sad_s_st';
                 chroma = chroma_sad_s_st';
                 mode = mode_sad_s_st';
+                compress = compress_sad_s;
+                hcdf = hcdf_sad_s_st';
+                flux = flux_sad_s_st';
+                lpcs = lpcs_sad_s;
          end
         
         directory = dir(strcat(path, subject, ratings_ext));
@@ -154,13 +184,15 @@ for i = 1:length(sub_list)
             %The 2 signals to be correlated are MFCC and the ratings
             mfcc = MFCCs(:,:);
             ratings = mfcc_behav_corrs(k).sub_info{i}.data(:,2);
-            %Truncate the first and last kkk seconds from both signals
-            kkk = 8;
+            %Truncate the first kkk seconds from both signals
+            kkk = 30;
             mfcc_first_index = ceil(length(mfcc)*(kkk/song_length));
-            mfcc_last_index = floor(length(mfcc)*((song_length-kkk)/song_length));
+            %mfcc_last_index = floor(length(mfcc)*((song_length-kkk)/song_length));
+            mfcc_last_index = length(mfcc);
             ratings_first_index = ceil(length(ratings)*(kkk/song_length));
-            ratings_last_index = floor(length(ratings)*((song_length-kkk)/song_length));
+            ratings_last_index = length(ratings);
             mfcc_tr = mfcc(mfcc_first_index:mfcc_last_index);
+
 
 
             %TODO: Put in other measures!
@@ -177,6 +209,11 @@ for i = 1:length(sub_list)
             skewness_tr  = skewness(mfcc_first_index:mfcc_last_index);
             kurtosis_tr  = kurtosis(mfcc_first_index:mfcc_last_index);
             chroma_tr  = chroma(mfcc_first_index:mfcc_last_index,:);
+            mode_tr = mode(mfcc_first_index:mfcc_last_index);
+            compress_tr = compress(mfcc_first_index:mfcc_last_index);
+            hcdf_tr = hcdf(mfcc_first_index:mfcc_last_index);
+            flux_tr = flux(mfcc_first_index:mfcc_last_index);
+            lpcs_tr = lpcs(mfcc_first_index:mfcc_last_index,:);
 
             ratings_tr = ratings(ratings_first_index:ratings_last_index);
             %{
@@ -201,8 +238,12 @@ for i = 1:length(sub_list)
             mfcc_behav_corrs(k).processed_spread_signals.sub{i}.mfcc{1} = spread_tr;
             mfcc_behav_corrs(k).processed_skewness_signals.sub{i}.mfcc{1} = skewness_tr;
             mfcc_behav_corrs(k).processed_kurtosis_signals.sub{i}.mfcc{1} = kurtosis_tr;
-            mfcc_behav_corrs(k).processed_chroma_signals.sub{i}.mfcc{1} = chroma_tr;          
-              
+            mfcc_behav_corrs(k).processed_chroma_signals.sub{i}.mfcc{1} = chroma_tr;
+            mfcc_behav_corrs(k).processed_mode_signals.sub{i}.mfcc{1} = mode_tr;
+            mfcc_behav_corrs(k).processed_compression_signals.sub{i}.mfcc{1} = compress_tr;
+            mfcc_behav_corrs(k).processed_hcdf_signals.sub{i}.mfcc{1} = hcdf_tr;
+            mfcc_behav_corrs(k).processed_flux_signals.sub{i}.mfcc{1} = flux_tr;
+            mfcc_behav_corrs(k).processed_lpcs_signals.sub{i}.mfcc{1} = lpcs_tr;
            end
         else
             mfcc_behav_corrs(k).sub_info{i}.id = subject;

@@ -1,7 +1,7 @@
 cd 'sad_l_split'
 
 %grain is how often the features are computed in sec
-grain = .05;
+grain = .025;
 hamming = @(N)(0.54-0.46*cos(2*pi*[0:N-1].'/(N-1)));
 M = 20;
 C = 13;
@@ -78,7 +78,7 @@ clear
 
 cd '../sad_s_split'
 
-grain = .05;
+grain = .025;
 hamming = @(N)(0.54-0.46*cos(2*pi*[0:N-1].'/(N-1)));
 M = 20;
 C = 13;
@@ -96,10 +96,10 @@ MFCCs_sad_s_double_del  = [];
 %and harmonicdetection: harmonic change detection function??
 
 
-[y,fs] = audioread(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav'));
+[y,fs] = audioread(strcat('snl_s_norm.wav'));
 y = sum(y,2);
 
-features_sad_s = mirfeatures(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s'));
+features_sad_s = mirfeatures(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s'));
 MFCCs_sad_s_mir_t = mirgetdata(features_sad_s.spectral.mfcc);
 MFCCs_sad_s_mir_d = mirgetdata(features_sad_s.spectral.dmfcc);
 MFCCs_sad_s_mir_dd = mirgetdata(features_sad_s.spectral.ddmfcc);
@@ -116,24 +116,24 @@ MFCCs_sad_s = mfcc(y,fs,2000*grain,1000*grain,alpha,'hamming',R,M,C,L);
 
 
 %harm_sad_l_st  = [harm_sad_l_st, mirgetdata(mirharmonicity(mirframe(strcat('snl_l_norm_',zero,num2str(i),'.wav'),.05,.025)))];
-%inharm_sad_l_st = mirgetdata(mirinharmonicity(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s')));
-clarity_sad_s_st  = mirgetdata(mirpulseclarity(mirautocor(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s'))));
-brightness_sad_s_st  = mirgetdata(mirbrightness(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s')));
-zc_sad_s_st  = mirgetdata(mirzerocross(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s')));
-key_strength_sad_s_st  = mirgetdata(mirkeystrength(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s')));
+%inharm_sad_l_st = mirgetdata(mirinharmonicity(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s')));
+clarity_sad_s_st  = mirgetdata(mirpulseclarity(mirautocor(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s'))));
+brightness_sad_s_st  = mirgetdata(mirbrightness(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s')));
+zc_sad_s_st  = mirgetdata(mirzerocross(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s')));
+key_strength_sad_s_st  = mirgetdata(mirkeystrength(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s')));
 key_strength_sad_s_st = max(key_strength_sad_s_st(:,:,1,1),key_strength_sad_s_st(:,:,1,2));
 key_strength_sad_s_st_max = max(key_strength_sad_s_st);
-rms_sad_s_st = mirgetdata(mirrms(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s')));
-centroid_sad_s_st = mirgetdata(mircentroid(mirspectrum(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s'))));
-spread_sad_s_st = mirgetdata(mirspread(mirspectrum(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s'))));
-skewness_sad_s_st = mirgetdata(mirskewness(mirspectrum(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s'))));
-kurtosis_sad_s_st = mirgetdata(mirkurtosis(mirspectrum(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s'))));
-chroma_sad_s_st = mirgetdata(mirchromagram(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s')));
-mode_sad_s_st = mirgetdata(mirmode(mirchromagram(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s'))));
+rms_sad_s_st = mirgetdata(mirrms(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s')));
+centroid_sad_s_st = mirgetdata(mircentroid(mirspectrum(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s'))));
+spread_sad_s_st = mirgetdata(mirspread(mirspectrum(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s'))));
+skewness_sad_s_st = mirgetdata(mirskewness(mirspectrum(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s'))));
+kurtosis_sad_s_st = mirgetdata(mirkurtosis(mirspectrum(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s'))));
+chroma_sad_s_st = mirgetdata(mirchromagram(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s')));
+mode_sad_s_st = mirgetdata(mirmode(mirchromagram(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s'))));
 
 %pad by 0s
-hcdf_sad_s_st = mirgetdata(mirhcdf(mirchromagram(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s'))));
-flux_sad_s_st = mirgetdata(mirflux(mirframe('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta.wav',2*grain,'s',grain,'s')));
+hcdf_sad_s_st = mirgetdata(mirhcdf(mirchromagram(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s'))));
+flux_sad_s_st = mirgetdata(mirflux(mirframe('snl_s_norm.wav',2*grain,'s',grain,'s')));
 hcdf_sad_s_st = [0,hcdf_sad_s_st];
 flux_sad_s_st = [0,flux_sad_s_st];
 
@@ -156,7 +156,7 @@ clear
 
 cd '../happy_split'
 
-grain = .05;
+grain = .025;
 hamming = @(N)(0.54-0.46*cos(2*pi*[0:N-1].'/(N-1)));
 M = 20;
 C = 13;
