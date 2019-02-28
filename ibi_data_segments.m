@@ -106,8 +106,15 @@ for i = 1:length(sub_list)
                 section_ratings = ratings(first_sect_index:last_sect_index);
                 %Check for sampling error
                 if isempty(section_ratings)
-                   section_ratings = 0; 
                    ibi_data(j).sub(i).error = 1;
+                   reset_index = find(diff(timestamps)<0);
+                   timestamps = timestamps(reset_index+1:end);
+                   ratings = ratings(reset_index+1:end);
+                   [a,first_sect_index] = min(abs(timestamps - section_timestamps(k)));
+                   [a,last_sect_index] = min(abs(timestamps - section_timestamps(k+1)));
+                   [b,first_ibi_index] = min(abs(raw_ibi_time - section_timestamps(k)));
+                   [b,last_ibi_index] = min(abs(raw_ibi_time - section_timestamps(k+1)));
+                   section_ratings = ratings(first_sect_index:last_sect_index);
                 end
                 section_ibi_time = raw_ibi_time(first_ibi_index:last_ibi_index);
             
@@ -190,6 +197,7 @@ for type = 1:6
           sum_hrv = sum_hrv + [ibi_data(type).sub(10).section(:).hrv_section]';
        else
           ibi_data(type).sub(i).empty = 1;
+          ibi_data(type).sub(i).resampled_full_ratings = zeros(smallest_num_samples,1);
        end
     end
 
@@ -204,7 +212,7 @@ end
 
 type = 2;
 
-figure(8)
+figure(1)
 hold on
 x1 = ibi_data(type).section_timestamps;
 y1 = ibi_data(type).average_section_hrv;
