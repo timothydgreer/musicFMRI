@@ -7,7 +7,7 @@ M = 20;
 C = 13;
 L = 22;
 alpha = .97;
-R = [200,8000];
+R = [100,6400];
 
 MFCCs_sad_l  = [];
 MFCCs_sad_l_del  = [];
@@ -84,7 +84,7 @@ M = 20;
 C = 13;
 L = 22;
 alpha = .97;
-R = [200,8000];
+R = [100,6400];
 
 MFCCs_sad_s  = [];
 MFCCs_sad_s_del  = [];
@@ -162,7 +162,7 @@ M = 20;
 C = 13;
 L = 22;
 alpha = .97;
-R = [200,8000];
+R = [100,6400];
 
 MFCCs_happy  = [];
 MFCCs_happy_del  = [];

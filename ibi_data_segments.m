@@ -106,15 +106,8 @@ for i = 1:length(sub_list)
                 section_ratings = ratings(first_sect_index:last_sect_index);
                 %Check for sampling error
                 if isempty(section_ratings)
+                   section_ratings = 0; 
                    ibi_data(j).sub(i).error = 1;
-                   reset_index = find(diff(timestamps)<0);
-                   timestamps = timestamps(reset_index+1:end);
-                   ratings = ratings(reset_index+1:end);
-                   [a,first_sect_index] = min(abs(timestamps - section_timestamps(k)));
-                   [a,last_sect_index] = min(abs(timestamps - section_timestamps(k+1)));
-                   [b,first_ibi_index] = min(abs(raw_ibi_time - section_timestamps(k)));
-                   [b,last_ibi_index] = min(abs(raw_ibi_time - section_timestamps(k+1)));
-                   section_ratings = ratings(first_sect_index:last_sect_index);
                 end
                 section_ibi_time = raw_ibi_time(first_ibi_index:last_ibi_index);
             
@@ -123,7 +116,6 @@ for i = 1:length(sub_list)
                    intervals = 0; 
                 end
                 hrv = movstd(intervals, [window_size 0]);%movestd uses a moving window 
-                hrv_section = std(intervals);
                 ratings_rsmpld = resample(section_ratings, length(hrv), length(section_ratings));
                 %{
                 Resample the ratings signal to the sampling rate of the hrv signal. Note 
@@ -142,81 +134,14 @@ for i = 1:length(sub_list)
                     ibi_data(j).sub(i).section(k).corrcoef = NaN; 
                 end
                 ibi_data(j).sub(i).section(k).ratings_signal = section_ratings;
+                ibi_data(j).sub(i).section(k).timestamps = section_timestamps;
                 ibi_data(j).sub(i).section(k).ratings_resampled = ratings_rsmpld;
-                ibi_data(j).sub(i).section(k).hrv_windowed = hrv; 
-                ibi_data(j).sub(i).section(k).hrv_section = hrv_section;
+                ibi_data(j).sub(i).section(k).hrv_signal = hrv; 
                 ibi_data(j).sub(i).section(k).ibi_signal = intervals;
                 ibi_data(j).sub(i).section(k).average_ibi = mean(intervals);
             end
-            ibi_data(j).sub(i).full_timestamps = timestamps;
-            ibi_data(j).sub(i).full_ratings = ratings;
         else
         ibi_data(j).sub(i).id = subject;
         end
-        ibi_data(j).section_timestamps = section_timestamps;
     end
 end
-
-%Find the average ratings signal over all partipants for each of the 6
-%experiments
-
-%Requires resampling all the signals to the lowest number of samples among
-%all subjects
-
-%Note that some of the subjects did not have recorded data for all 6
-%experiments, so there are some empty arrays that need to be taken care of
-
-for type = 1:6
-
-    num_subjects = length(ibi_data(type).sub);
-
-    %Find the shortest ratings signal
-    smallest_num_samples = inf;
-    smallest_timestamps = [];
-    num_empty_subjects = 0;
-    for i = 1:num_subjects
-        len = length(ibi_data(type).sub(i).full_ratings);
-        if len < 2000 %Less than 2000 samples should indicate a sampling error
-            num_empty_subjects = num_empty_subjects+1;
-        else
-           if len < smallest_num_samples
-               smallest_num_samples = len;
-               smallest_timestamps = ibi_data(type).sub(i).full_timestamps;
-           end
-        end
-    end
-
-    %Resample everything and average
-    sum_ratings = zeros(smallest_num_samples,1);
-    sum_hrv = zeros(length(ibi_data(type).section_timestamps),1);
-    for i = 1:num_subjects
-       full_ratings = ibi_data(type).sub(i).full_ratings; 
-       if ~isempty(full_ratings)
-          ibi_data(type).sub(i).resampled_full_ratings = resample(full_ratings, smallest_num_samples ,length(full_ratings));
-          sum_ratings = sum_ratings + ibi_data(type).sub(i).resampled_full_ratings;
-          sum_hrv = sum_hrv + [ibi_data(type).sub(10).section(:).hrv_section]';
-       else
-          ibi_data(type).sub(i).empty = 1;
-          ibi_data(type).sub(i).resampled_full_ratings = zeros(smallest_num_samples,1);
-       end
-    end
-
-    average_ratings = sum_ratings/(num_subjects - num_empty_subjects);
-    average_hrv = sum_hrv/(num_subjects - num_empty_subjects);
-    ibi_data(type).average_ratings = average_ratings;
-    ibi_data(type).average_section_hrv = average_hrv;
-    ibi_data(type).smallest_timestamps = smallest_timestamps;
-end
-
-%Sample normalized plots
-
-type = 2;
-
-figure(1)
-hold on
-x1 = ibi_data(type).section_timestamps;
-y1 = ibi_data(type).average_section_hrv;
-plot(x1,y1/max(y1))
-x2 = ibi_data(type).smallest_timestamps;
-y2 = ibi_data(type).average_ratings;
-plot(x2,y2/max(y2))

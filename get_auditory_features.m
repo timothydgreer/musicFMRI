@@ -4,7 +4,7 @@ M = 20;
 C = 13;
 L = 22;
 alpha = .97;
-R = [200,8000];
+R = [100,6400];
 
 MFCCs_sad_l  = [];
 MFCCs_sad_l_del  = [];
@@ -70,7 +70,7 @@ M = 20;
 C = 13;
 L = 22;
 alpha = .97;
-R = [200,8000];
+R = [100,6400];
 [y,fs] = audioread('snl_l_norm.wav');
 y = sum(y,2);
 %y1 = y(1:floor(length(y)/2));
@@ -90,7 +90,7 @@ M = 20;
 C = 13;
 L = 22;
 alpha = .97;
-R = [200,8000];
+R = [100,6400];
 
 MFCCs_sad_s  = [];
 MFCCs_sad_s_del  = [];
@@ -102,23 +102,23 @@ tempo_sad_s  = [];
 brightness_sad_s  = [];
 zc_sad_s = [];
 key_strength_sad_s  = [];
-for i = 1:13
+for i = 1:18
     if i < 10
         zero = '0';
     else
         zero = '';
     end
-    [y,fs] = audioread(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_norm_',zero,num2str(i),'.wav'));
+    [y,fs] = audioread(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_',zero,num2str(i),'.wav'));
     y = sum(y,2);
     %mirsegment with RMS is useful?
     MFCCs_sad_s = [MFCCs_sad_s, mfcc(y,fs,50,25,.97,'hamming',R,M,C,L)];
     %harm_sad_s  = [harm_sad_s,mirharmonicity(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_norm_',zero,num2str(i),'.wav'))];
     %inharm_sad_s  = [inharm_sad_s,mirinharmonicity(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_norm_',zero,num2str(i),'.wav'))];
-    clarity_sad_s  = [clarity_sad_s,mirpulseclarity(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_norm_',zero,num2str(i),'.wav'))];
-    tempo_sad_s  = [tempo_sad_s,mirtempo(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_norm_',zero,num2str(i),'.wav'))];
-    brightness_sad_s  = [brightness_sad_s,mirbrightness(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_norm_',zero,num2str(i),'.wav'))];
-    zc_sad_s  = [zc_sad_s,mirzerocross(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_norm_',zero,num2str(i),'.wav'))];
-    key_strength_sad_s  = [key_strength_sad_s,mirkeystrength(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_norm_',zero,num2str(i),'.wav'))];
+    clarity_sad_s  = [clarity_sad_s,mirpulseclarity(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_',zero,num2str(i),'.wav'))];
+    tempo_sad_s  = [tempo_sad_s,mirtempo(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_',zero,num2str(i),'.wav'))];
+    brightness_sad_s  = [brightness_sad_s,mirbrightness(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_',zero,num2str(i),'.wav'))];
+    zc_sad_s  = [zc_sad_s,mirzerocross(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_',zero,num2str(i),'.wav'))];
+    key_strength_sad_s  = [key_strength_sad_s,mirkeystrength(strcat('Olafur_Arnalds_-_Living_Room_Songs_-_1_Fyrsta_',zero,num2str(i),'.wav'))];
 end
 
 for i = 1:length(MFCCs_sad_s)-1
@@ -143,7 +143,7 @@ zc_sad_s_u  = [];
 key_strength_sad_s_u  = [];
 
 
-for i = 1:13
+for i = 1:18
     clarity_sad_s_u = [clarity_sad_s_u, mirgetdata(clarity_sad_s(i))];
     tempo_sad_s_u = [tempo_sad_s_u, mirgetdata(tempo_sad_s(i))];
     brightness_sad_s_u = [brightness_sad_s_u, mirgetdata(brightness_sad_s(i))];
@@ -171,7 +171,7 @@ M = 20;
 C = 13;
 L = 22;
 alpha = .97;
-R = [200,8000];
+R = [100,6400];
 
 MFCCs_happy = [];
 MFCCs_happy_del  = [];
@@ -183,7 +183,7 @@ tempo_happy  = [];
 brightness_happy  = [];
 zc_happy = [];
 key_strength_happy  = [];
-for i = 1:14
+for i = 1:15
     if i < 10
         zero = '0';
     else
@@ -220,7 +220,7 @@ brightness_happy_u  = [];
 zc_happy_u  = [];
 key_strength_happy_u  = [];
 
-for i = 1:14
+for i = 1:15
     clarity_happy_u = [clarity_happy_u, mirgetdata(clarity_happy(i))];
     tempo_happy_u = [tempo_happy_u, mirgetdata(tempo_happy(i))];
     brightness_happy_u = [brightness_happy_u, mirgetdata(brightness_happy(i))];

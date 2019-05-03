@@ -1,7 +1,7 @@
 %Note: Some ratings are not available. Example: Participant 0117EG_AY only
 %has ratings for emotion for the short sad song.
 %Also note: some files may be empty, such as 1108BS_AY_snl_s_emo_log.txt
-
+ 
 clear, clc
 
 load('mfccs_sad_l.mat') % Load mfcc data. Note that it is row-oriented
