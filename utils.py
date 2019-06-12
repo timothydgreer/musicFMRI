@@ -11,7 +11,10 @@ def params_setup(model_type):
     parser.add_argument('--output_filename', type=str, default="none")
     parser.add_argument('--variable_threshold', type=float, default=0.5)
     parser.add_argument('--time_snip', type=int, default=0) # seconds to snip from beginning
+    parser.add_argument('--test_set_at_beginning', type=bool, default=False) # Test Set at Beginning or End
+    parser.add_argument('--show_plots', type=bool, default=False)
     parser.add_argument('--sample_rate', type=int, default=40) # sample rate in Hz
+
 
     para = parser.parse_args()
 
@@ -32,6 +35,8 @@ def load_data(para):
 
     # Load y (y will be first column in X)
     y = X[:, 0]
+    X = X[:, 1:]
+
 
     # Snip out first time_snip secs
     X_cut = X[para.sample_rate * para.time_snip:]
